@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { SunflowerRow } from "@/components/sunflower-row";
 import { getCategories } from "@/lib/queries/products";
@@ -16,10 +17,7 @@ export async function SiteFooter() {
             href="/"
             className="mb-2 flex items-center justify-center gap-2 font-heading text-lg font-semibold text-nogal sm:justify-start"
           >
-            <svg width="22" height="22" viewBox="0 0 26 26" fill="none">
-              <circle cx="13" cy="13" r="11.5" stroke="var(--nogal)" strokeWidth="1.4" />
-              <circle cx="13" cy="13" r="1.6" fill="var(--ocre)" />
-            </svg>
+            <Image src="/branding/logo-64.png" alt="" width={24} height={24} />
             {siteName}
           </Link>
           <p className="text-sm leading-relaxed text-nogal-suave">
