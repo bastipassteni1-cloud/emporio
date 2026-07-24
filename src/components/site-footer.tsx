@@ -2,7 +2,7 @@ import Link from "next/link";
 import { SunflowerRow } from "@/components/sunflower-row";
 import { getCategories } from "@/lib/queries/products";
 
-const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? "Catálogo Artesanal";
+const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? "Girasol Artesanal";
 
 export async function SiteFooter() {
   const categories = await getCategories();

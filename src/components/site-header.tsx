@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
-const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? "Catálogo Artesanal";
+const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? "Girasol Artesanal";
 
 const navItems = [
   { href: "/", label: "Catálogo" },

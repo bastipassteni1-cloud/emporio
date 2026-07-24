@@ -24,7 +24,7 @@ const caveat = Caveat({
   weight: ["600", "700"],
 });
 
-const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? "Catálogo Artesanal";
+const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? "Girasol Artesanal";
 
 export const metadata: Metadata = {
   title: { default: siteName, template: `%s | ${siteName}` },
