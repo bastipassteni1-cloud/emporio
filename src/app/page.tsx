@@ -19,7 +19,7 @@ export default async function HomePage({
       <CatalogHero />
 
       <div className="mx-auto max-w-5xl px-7">
-        <div className="mt-7 flex flex-wrap justify-center gap-2.5">
+        <div className="mt-4 flex flex-wrap justify-center gap-2.5">
           <CategoryFilter categories={categories} activeSlug={categoria} />
         </div>
 
@@ -29,7 +29,7 @@ export default async function HomePage({
             {categoria ? " en esta categoría" : ""}. Vuelve pronto.
           </p>
         ) : (
-          <div className="mt-10 grid grid-cols-2 gap-7 pb-10 sm:grid-cols-3 md:grid-cols-4">
+          <div className="mt-6 grid grid-cols-2 gap-7 pb-10 sm:grid-cols-3 md:grid-cols-4">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
