@@ -23,10 +23,11 @@ export function SiteHeader() {
           className="flex items-center gap-2 font-heading text-lg font-semibold text-nogal sm:gap-2.5 sm:text-xl"
         >
           <Image
-            src="/branding/logo-64.png"
+            src="/branding/logo-256.png"
             alt=""
-            width={28}
-            height={28}
+            width={44}
+            height={44}
+            quality={95}
             className="shrink-0"
           />
           {siteName}

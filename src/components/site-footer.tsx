@@ -17,7 +17,13 @@ export async function SiteFooter() {
             href="/"
             className="mb-2 flex items-center justify-center gap-2 font-heading text-lg font-semibold text-nogal sm:justify-start"
           >
-            <Image src="/branding/logo-64.png" alt="" width={24} height={24} />
+            <Image
+              src="/branding/logo-256.png"
+              alt=""
+              width={36}
+              height={36}
+              quality={95}
+            />
             {siteName}
           </Link>
           <p className="text-sm leading-relaxed text-nogal-suave">
