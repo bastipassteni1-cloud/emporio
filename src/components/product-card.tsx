@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { formatPrice } from "@/lib/format";
+import { formatPrice, formatProductStatus } from "@/lib/format";
 import { getCategoryTheme } from "@/lib/category-theme";
 import { getProductImageUrl } from "@/lib/storage";
 import type { Product } from "@/lib/types";
@@ -21,7 +21,7 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-linea bg-crudo transition-transform hover:-translate-y-1 hover:shadow-lg">
       <div
-        className="relative flex aspect-[4/3] items-center justify-center"
+        className="relative flex aspect-square items-center justify-center"
         style={images.length === 0 ? { backgroundImage: theme.gradient } : undefined}
       >
         <Link href={href} aria-label={product.name} className="absolute inset-0">
@@ -76,26 +76,23 @@ export function ProductCard({ product }: { product: Product }) {
             </div>
           </>
         )}
-
-        {product.status === "available" ? (
-          <span className="pointer-events-none absolute top-2.5 left-2.5 rounded-full bg-crudo/90 px-2.5 py-1 font-caveat text-xs font-bold text-nogal-suave sm:text-sm">
-            hecho a mano
-          </span>
-        ) : (
-          <span className="pointer-events-none absolute top-2.5 left-2.5 rounded-full bg-crudo/90 px-2.5 py-1 text-[0.68rem] font-semibold text-nogal-suave">
-            {product.status === "sold" ? "Vendido" : "Hecho a pedido"}
-          </span>
-        )}
       </div>
 
       <Link href={href} className="flex flex-1 flex-col gap-1 px-3 pt-3 pb-4 sm:gap-1.5 sm:px-4 sm:pt-4 sm:pb-5">
-        {product.category && (
-          <span
-            className={`text-[0.68rem] font-bold tracking-wide uppercase sm:text-[0.72rem] ${theme.labelClassName}`}
-          >
-            {product.category.name}
-          </span>
-        )}
+        <div className="flex items-center justify-between gap-2">
+          {product.category && (
+            <span
+              className={`text-[0.68rem] font-bold tracking-wide uppercase sm:text-[0.72rem] ${theme.labelClassName}`}
+            >
+              {product.category.name}
+            </span>
+          )}
+          {product.status !== "available" && (
+            <span className="rounded-full bg-muted px-2 py-0.5 text-[0.65rem] font-semibold text-nogal-suave">
+              {formatProductStatus(product.status)}
+            </span>
+          )}
+        </div>
         <p className="font-heading text-base font-medium text-nogal sm:text-lg">
           {product.name}
         </p>
