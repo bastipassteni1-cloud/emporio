@@ -6,6 +6,7 @@ import { ContactForm } from "@/components/contact-form";
 import { ProductGallery } from "@/components/product-gallery";
 import { WhatsAppButton } from "@/components/whatsapp-button";
 import { formatPrice, formatProductStatus } from "@/lib/format";
+import { getCategoryTheme } from "@/lib/category-theme";
 import { getProductBySlug } from "@/lib/queries/products";
 import { getProductImageUrl } from "@/lib/storage";
 
@@ -45,9 +46,11 @@ export default async function ProductPage({
 
   if (!product) notFound();
 
+  const theme = getCategoryTheme(product.category?.slug);
+
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8">
-      <div className="grid gap-8 md:grid-cols-2">
+    <div className="mx-auto max-w-5xl px-4 py-6 sm:px-7 sm:py-8">
+      <div className="grid gap-6 md:grid-cols-2 md:gap-10">
         <ProductGallery
           images={product.product_images ?? []}
           productName={product.name}
@@ -55,15 +58,17 @@ export default async function ProductPage({
 
         <div>
           {product.category && (
-            <p className="text-sm text-muted-foreground">
+            <span
+              className={`text-[0.72rem] font-bold tracking-wide uppercase ${theme.labelClassName}`}
+            >
               {product.category.name}
-            </p>
+            </span>
           )}
-          <h1 className="mt-1 text-2xl font-semibold tracking-tight">
+          <h1 className="mt-1 font-heading text-xl font-medium text-nogal sm:text-2xl">
             {product.name}
           </h1>
           <div className="mt-2 flex items-center gap-2">
-            <p className="text-xl font-semibold">
+            <p className="text-lg font-bold text-nogal sm:text-xl">
               {formatPrice(product.price)}
             </p>
             {product.status !== "available" && (
@@ -73,26 +78,28 @@ export default async function ProductPage({
             )}
           </div>
 
-          <p className="mt-4 whitespace-pre-line text-muted-foreground">
+          <p className="mt-3.5 text-sm leading-relaxed whitespace-pre-line text-nogal-suave sm:mt-4 sm:text-base">
             {product.description}
           </p>
 
           {product.dimensions && (
-            <p className="mt-4 text-sm">
+            <p className="mt-3.5 text-sm text-nogal sm:mt-4">
               <span className="font-medium">Medidas:</span>{" "}
-              {product.dimensions}
+              <span className="text-nogal-suave">{product.dimensions}</span>
             </p>
           )}
 
-          <div className="mt-6">
+          <div className="mt-5 sm:mt-6">
             <WhatsAppButton productName={product.name} />
           </div>
 
-          <Separator className="my-8" />
+          <Separator className="my-6 sm:my-8" />
 
           <div>
-            <h2 className="text-lg font-medium">¿Tienes una consulta?</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <h2 className="font-heading text-base font-medium text-nogal sm:text-lg">
+              ¿Tienes una consulta?
+            </h2>
+            <p className="mt-1 text-sm text-nogal-suave">
               Escríbenos y te respondemos a la brevedad.
             </p>
             <div className="mt-4">

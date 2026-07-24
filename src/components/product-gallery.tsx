@@ -18,7 +18,7 @@ export function ProductGallery({
 
   if (sorted.length === 0) {
     return (
-      <div className="flex aspect-square items-center justify-center rounded-lg bg-muted text-muted-foreground">
+      <div className="flex aspect-square items-center justify-center rounded-2xl bg-muted text-muted-foreground">
         Sin fotos disponibles
       </div>
     );
@@ -26,7 +26,7 @@ export function ProductGallery({
 
   return (
     <div>
-      <div className="relative aspect-square overflow-hidden rounded-lg bg-muted">
+      <div className="relative aspect-square overflow-hidden rounded-2xl bg-muted">
         <Image
           src={getProductImageUrl(sorted[active].storage_path)}
           alt={productName}

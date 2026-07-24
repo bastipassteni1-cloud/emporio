@@ -1,13 +1,13 @@
 export function CatalogHero() {
   return (
-    <section className="mx-auto max-w-5xl px-7 pt-8 pb-1 text-center">
-      <p className="font-caveat text-xl font-bold text-ciruela">
+    <section className="mx-auto max-w-5xl px-5 pt-6 pb-1 text-center sm:px-7 sm:pt-8">
+      <p className="font-caveat text-lg font-bold text-ciruela sm:text-xl">
         hecho con cariño
       </p>
-      <h1 className="mx-auto mt-1 max-w-[24ch] font-heading text-2xl font-medium italic leading-tight text-nogal sm:text-3xl">
+      <h1 className="mx-auto mt-1 max-w-[22ch] font-heading text-xl font-medium italic leading-tight text-nogal sm:max-w-[24ch] sm:text-3xl">
         Piezas artesanales hechas a mano, una por una.
       </h1>
-      <p className="mx-auto mt-2.5 max-w-[46ch] text-sm leading-relaxed text-nogal-suave sm:text-base">
+      <p className="mx-auto mt-2 max-w-[42ch] text-sm leading-relaxed text-nogal-suave sm:mt-2.5 sm:max-w-[46ch] sm:text-base">
         Madera, tejidos y bordados creados con tiempo y paciencia — cada
         pieza es única, igual que quien la hace.
       </p>

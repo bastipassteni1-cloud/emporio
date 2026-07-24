@@ -16,12 +16,12 @@ export function SiteHeader() {
 
   return (
     <header className="border-b border-linea bg-lino">
-      <div className="mx-auto flex max-w-5xl flex-col items-center gap-3.5 px-7 py-5 sm:flex-row sm:justify-between">
+      <div className="mx-auto flex max-w-5xl flex-col items-center gap-2 px-4 py-3.5 sm:flex-row sm:justify-between sm:gap-3.5 sm:px-7 sm:py-5">
         <Link
           href="/"
-          className="flex items-center gap-2.5 font-heading text-xl font-semibold text-nogal"
+          className="flex items-center gap-2 font-heading text-lg font-semibold text-nogal sm:gap-2.5 sm:text-xl"
         >
-          <svg width="26" height="26" viewBox="0 0 26 26" fill="none" className="shrink-0">
+          <svg width="22" height="22" viewBox="0 0 26 26" fill="none" className="shrink-0">
             <circle cx="13" cy="13" r="11.5" stroke="var(--nogal)" strokeWidth="1.4" />
             <circle cx="13" cy="13" r="1.6" fill="var(--ocre)" />
             <path
@@ -33,7 +33,7 @@ export function SiteHeader() {
           </svg>
           {siteName}
         </Link>
-        <nav className="flex gap-7">
+        <nav className="flex gap-5 sm:gap-7">
           {navItems.map((item) => {
             const active = pathname === item.href;
             return (

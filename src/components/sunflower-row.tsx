@@ -47,7 +47,7 @@ export function SunflowerRow() {
   return (
     <div
       aria-hidden
-      className="flex flex-wrap items-end justify-center gap-5 pt-5"
+      className="flex flex-wrap items-end justify-center gap-3 pt-4 sm:gap-5 sm:pt-5"
     >
       {SIZES.map((size, i) => (
         <div key={i} style={{ width: size, height: size, opacity: OPACITIES[i] }}>

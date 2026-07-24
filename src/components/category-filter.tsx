@@ -15,7 +15,7 @@ function Pill({
     <Link
       href={href}
       className={cn(
-        "rounded-full border-[1.5px] px-5 py-2 font-sans text-sm font-semibold transition-colors",
+        "rounded-full border-[1.5px] px-4 py-1.5 font-sans text-sm font-semibold transition-colors sm:px-5 sm:py-2",
         active
           ? "border-nogal bg-nogal text-crudo"
           : "border-linea bg-crudo text-nogal-suave hover:border-ocre hover:text-nogal",

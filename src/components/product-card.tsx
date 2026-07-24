@@ -48,17 +48,17 @@ export function ProductCard({ product }: { product: Product }) {
               onClick={() =>
                 setIndex((i) => (i === 0 ? images.length - 1 : i - 1))
               }
-              className="absolute top-1/2 left-2 flex size-7 -translate-y-1/2 items-center justify-center rounded-full bg-crudo/90 text-nogal shadow-sm"
+              className="absolute top-1/2 left-1.5 flex size-6 -translate-y-1/2 items-center justify-center rounded-full bg-crudo/90 text-nogal shadow-sm sm:left-2 sm:size-7"
             >
-              <ChevronLeftIcon className="size-4" />
+              <ChevronLeftIcon className="size-3.5 sm:size-4" />
             </button>
             <button
               type="button"
               aria-label="Foto siguiente"
               onClick={() => setIndex((i) => (i === images.length - 1 ? 0 : i + 1))}
-              className="absolute top-1/2 right-2 flex size-7 -translate-y-1/2 items-center justify-center rounded-full bg-crudo/90 text-nogal shadow-sm"
+              className="absolute top-1/2 right-1.5 flex size-6 -translate-y-1/2 items-center justify-center rounded-full bg-crudo/90 text-nogal shadow-sm sm:right-2 sm:size-7"
             >
-              <ChevronRightIcon className="size-4" />
+              <ChevronRightIcon className="size-3.5 sm:size-4" />
             </button>
             <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1.5">
               {images.map((image, i) => (
@@ -77,32 +77,33 @@ export function ProductCard({ product }: { product: Product }) {
           </>
         )}
 
-        <span className="pointer-events-none absolute top-3 left-3 rounded-full bg-crudo/90 px-3 py-1 font-caveat text-sm font-bold text-nogal-suave">
-          hecho a mano
-        </span>
-        {product.status !== "available" && (
-          <span className="pointer-events-none absolute top-3 right-3 rounded-full bg-crudo/90 px-3 py-1 text-xs font-semibold text-nogal-suave">
+        {product.status === "available" ? (
+          <span className="pointer-events-none absolute top-2.5 left-2.5 rounded-full bg-crudo/90 px-2.5 py-1 font-caveat text-xs font-bold text-nogal-suave sm:text-sm">
+            hecho a mano
+          </span>
+        ) : (
+          <span className="pointer-events-none absolute top-2.5 left-2.5 rounded-full bg-crudo/90 px-2.5 py-1 text-[0.68rem] font-semibold text-nogal-suave">
             {product.status === "sold" ? "Vendido" : "Hecho a pedido"}
           </span>
         )}
       </div>
 
-      <Link href={href} className="flex flex-1 flex-col gap-1.5 px-4 pt-4 pb-5">
+      <Link href={href} className="flex flex-1 flex-col gap-1 px-3 pt-3 pb-4 sm:gap-1.5 sm:px-4 sm:pt-4 sm:pb-5">
         {product.category && (
           <span
-            className={`text-[0.72rem] font-bold tracking-wide uppercase ${theme.labelClassName}`}
+            className={`text-[0.68rem] font-bold tracking-wide uppercase sm:text-[0.72rem] ${theme.labelClassName}`}
           >
             {product.category.name}
           </span>
         )}
-        <p className="font-heading text-lg font-medium text-nogal">
+        <p className="font-heading text-base font-medium text-nogal sm:text-lg">
           {product.name}
         </p>
-        <div className="mt-auto flex items-center justify-between pt-2.5">
-          <span className="text-base font-bold text-nogal">
+        <div className="mt-auto flex items-center justify-between pt-2 sm:pt-2.5">
+          <span className="text-sm font-bold text-nogal sm:text-base">
             {formatPrice(product.price)}
           </span>
-          <span className="rounded-full border-[1.5px] border-nogal px-4 py-1.5 text-[0.82rem] font-semibold text-nogal transition-colors group-hover:bg-nogal group-hover:text-crudo">
+          <span className="rounded-full border-[1.5px] border-nogal px-3 py-1 text-xs font-semibold text-nogal transition-colors group-hover:bg-nogal group-hover:text-crudo sm:px-4 sm:py-1.5 sm:text-[0.82rem]">
             Ver
           </span>
         </div>
