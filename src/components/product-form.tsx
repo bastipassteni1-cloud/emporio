@@ -82,7 +82,7 @@ export function ProductForm({
 
       <div className="space-y-2">
         <Label htmlFor="name">Nombre</Label>
-        <Input id="name" name="name" defaultValue={product?.name} required />
+        <Input id="name" name="name" defaultValue={product?.name} />
       </div>
 
       <div className="space-y-2">
@@ -92,7 +92,6 @@ export function ProductForm({
           name="description"
           rows={4}
           defaultValue={product?.description}
-          required
         />
       </div>
 
@@ -105,7 +104,6 @@ export function ProductForm({
           min={0}
           step={1}
           defaultValue={product?.price}
-          required
         />
       </div>
 

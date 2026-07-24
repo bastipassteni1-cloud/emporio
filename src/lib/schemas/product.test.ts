@@ -16,32 +16,60 @@ describe("productSchema", () => {
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.data.price).toBe(25000);
+      expect(result.data.name).toBe("Silla de madera");
+      expect(result.data.category_id).toBe(
+        "123e4567-e89b-12d3-a456-426614174000",
+      );
     }
   });
 
-  it("rechaza nombre muy corto", () => {
-    const result = productSchema.safeParse({ ...validInput, name: "A" });
-    expect(result.success).toBe(false);
+  it("no exige ningún campo: acepta un formulario completamente vacío", () => {
+    const result = productSchema.safeParse({
+      name: "",
+      description: "",
+      price: "",
+      dimensions: "",
+      status: "",
+      category_id: "",
+    });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.name).toBe("Producto sin nombre");
+      expect(result.data.description).toBe("");
+      expect(result.data.price).toBe(0);
+      expect(result.data.status).toBe("available");
+      expect(result.data.category_id).toBeNull();
+    }
   });
 
-  it("rechaza precio negativo", () => {
+  it("usa un precio 0 si el precio es negativo", () => {
     const result = productSchema.safeParse({ ...validInput, price: "-100" });
-    expect(result.success).toBe(false);
+    expect(result.success).toBe(true);
+    if (result.success) expect(result.data.price).toBe(0);
   });
 
-  it("rechaza precio no entero", () => {
+  it("usa un precio 0 si el precio no es entero", () => {
     const result = productSchema.safeParse({ ...validInput, price: "10.5" });
-    expect(result.success).toBe(false);
+    expect(result.success).toBe(true);
+    if (result.success) expect(result.data.price).toBe(0);
   });
 
-  it("rechaza un estado inválido", () => {
-    const result = productSchema.safeParse({ ...validInput, status: "en-reparacion" });
-    expect(result.success).toBe(false);
+  it("usa 'available' si el estado es inválido", () => {
+    const result = productSchema.safeParse({
+      ...validInput,
+      status: "en-reparacion",
+    });
+    expect(result.success).toBe(true);
+    if (result.success) expect(result.data.status).toBe("available");
   });
 
-  it("rechaza category_id que no es uuid", () => {
-    const result = productSchema.safeParse({ ...validInput, category_id: "no-es-uuid" });
-    expect(result.success).toBe(false);
+  it("usa null si category_id no es un uuid válido", () => {
+    const result = productSchema.safeParse({
+      ...validInput,
+      category_id: "no-es-uuid",
+    });
+    expect(result.success).toBe(true);
+    if (result.success) expect(result.data.category_id).toBeNull();
   });
 
   it("permite dimensions vacío", () => {
