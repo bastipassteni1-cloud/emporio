@@ -19,7 +19,7 @@ export function ProductCard({ product }: { product: Product }) {
   const href = `/productos/${product.slug}`;
 
   return (
-    <div className="group flex flex-col overflow-hidden rounded-2xl border border-linea bg-crudo transition-transform hover:-translate-y-1 hover:shadow-lg">
+    <div className="group flex flex-col overflow-hidden rounded-2xl border border-linea bg-crudo shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
       <div
         className="relative flex aspect-square items-center justify-center"
         style={images.length === 0 ? { backgroundImage: theme.gradient } : undefined}
