@@ -12,6 +12,26 @@ export type ProductFormState = {
   message?: string;
 };
 
+type NewImage = { storage_path: string; position: number };
+
+function parseNewImages(formData: FormData): NewImage[] {
+  return formData
+    .getAll("new_images")
+    .filter((v): v is string => typeof v === "string")
+    .map((raw) => {
+      try {
+        const parsed = JSON.parse(raw);
+        if (typeof parsed.storage_path === "string" && typeof parsed.position === "number") {
+          return parsed as NewImage;
+        }
+      } catch {
+        // ignore malformed entries
+      }
+      return null;
+    })
+    .filter((v): v is NewImage => v !== null);
+}
+
 async function ensureUniqueSlug(
   supabase: SupabaseClient,
   base: string,
@@ -26,27 +46,20 @@ async function ensureUniqueSlug(
   return `${candidate}-${crypto.randomUUID().slice(0, 6)}`;
 }
 
-async function uploadImages(
+async function insertImageRows(
   supabase: SupabaseClient,
   productId: string,
-  files: File[],
-  startPosition: number,
+  images: NewImage[],
 ) {
-  for (const [index, file] of files.entries()) {
-    if (!file.size) continue;
-    const path = `${productId}/${crypto.randomUUID()}-${file.name}`;
-    const { error: uploadError } = await supabase.storage
-      .from("product-images")
-      .upload(path, file);
-    if (uploadError) throw uploadError;
-
-    const { error: insertError } = await supabase.from("product_images").insert({
+  if (images.length === 0) return;
+  const { error } = await supabase.from("product_images").insert(
+    images.map((img) => ({
       product_id: productId,
-      storage_path: path,
-      position: startPosition + index,
-    });
-    if (insertError) throw insertError;
-  }
+      storage_path: img.storage_path,
+      position: img.position,
+    })),
+  );
+  if (error) throw error;
 }
 
 export async function createProduct(
@@ -82,13 +95,12 @@ export async function createProduct(
     return { status: "error", message: "No se pudo crear el producto." };
   }
 
-  const images = formData.getAll("images").filter((f): f is File => f instanceof File);
   try {
-    await uploadImages(supabase, product.id, images, 0);
+    await insertImageRows(supabase, product.id, parseNewImages(formData));
   } catch {
     return {
       status: "error",
-      message: "El producto se creó pero hubo un error subiendo las fotos.",
+      message: "El producto se creó pero hubo un error guardando las fotos.",
     };
   }
 
@@ -151,18 +163,12 @@ export async function updateProduct(
     }
   }
 
-  const { count } = await supabase
-    .from("product_images")
-    .select("id", { count: "exact", head: true })
-    .eq("product_id", productId);
-
-  const images = formData.getAll("images").filter((f): f is File => f instanceof File);
   try {
-    await uploadImages(supabase, productId, images, count ?? 0);
+    await insertImageRows(supabase, productId, parseNewImages(formData));
   } catch {
     return {
       status: "error",
-      message: "El producto se actualizó pero hubo un error subiendo las fotos.",
+      message: "El producto se actualizó pero hubo un error guardando las fotos.",
     };
   }
 

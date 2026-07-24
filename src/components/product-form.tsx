@@ -16,10 +16,13 @@ import {
 } from "@/components/ui/select";
 import { getProductImageUrl } from "@/lib/storage";
 import { formatProductStatus } from "@/lib/format";
+import { createClient } from "@/lib/supabase/client";
 import type { Category, Product } from "@/lib/types";
 import { MeasurementField } from "@/components/measurement-field";
 
 const initialState: ProductFormState = { status: "idle" };
+
+type NewImage = { storage_path: string; position: number };
 
 export function ProductForm({
   categories,
@@ -33,10 +36,49 @@ export function ProductForm({
   const [state, formAction, pending] = useActionState(action, initialState);
   const existingImages = product?.product_images ?? [];
   const [removedIds, setRemovedIds] = useState<string[]>([]);
+  const [newImages, setNewImages] = useState<NewImage[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  async function handleFilesSelected(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []);
+    e.target.value = "";
+    if (files.length === 0) return;
+
+    setUploading(true);
+    setUploadError(null);
+    const supabase = createClient();
+    const uploaded: NewImage[] = [];
+    let position =
+      existingImages.length + newImages.length - removedIds.length;
+
+    for (const file of files) {
+      const path = `${crypto.randomUUID()}-${file.name}`;
+      const { error } = await supabase.storage
+        .from("product-images")
+        .upload(path, file);
+      if (error) {
+        setUploadError("No se pudo subir una de las fotos. Intenta de nuevo.");
+        continue;
+      }
+      uploaded.push({ storage_path: path, position: position++ });
+    }
+
+    setNewImages((prev) => [...prev, ...uploaded]);
+    setUploading(false);
+  }
 
   return (
     <form action={formAction} className="max-w-lg space-y-4">
       {product && <input type="hidden" name="slug" value={product.slug} />}
+      {newImages.map((img) => (
+        <input
+          key={img.storage_path}
+          type="hidden"
+          name="new_images"
+          value={JSON.stringify(img)}
+        />
+      ))}
 
       <div className="space-y-2">
         <Label htmlFor="name">Nombre</Label>
@@ -107,9 +149,9 @@ export function ProductForm({
         </div>
       </div>
 
-      {existingImages.length > 0 && (
+      {(existingImages.length > 0 || newImages.length > 0) && (
         <div className="space-y-2">
-          <Label>Fotos actuales</Label>
+          <Label>Fotos</Label>
           <div className="flex flex-wrap gap-3">
             {existingImages.map((image) => {
               const marked = removedIds.includes(image.id);
@@ -146,23 +188,66 @@ export function ProductForm({
                 </div>
               );
             })}
+            {newImages.map((img) => (
+              <div key={img.storage_path} className="relative">
+                <div className="relative h-20 w-20 overflow-hidden rounded-md border">
+                  <Image
+                    src={getProductImageUrl(img.storage_path)}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    sizes="80px"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setNewImages((prev) =>
+                      prev.filter((i) => i.storage_path !== img.storage_path),
+                    )
+                  }
+                  className="mt-1 block w-full text-xs text-muted-foreground hover:underline"
+                >
+                  Quitar
+                </button>
+              </div>
+            ))}
           </div>
         </div>
       )}
 
       <div className="space-y-2">
         <Label htmlFor="images">
-          {existingImages.length > 0 ? "Agregar más fotos" : "Fotos"}
+          {existingImages.length > 0 || newImages.length > 0
+            ? "Agregar más fotos"
+            : "Fotos"}
         </Label>
-        <Input id="images" name="images" type="file" accept="image/*" multiple />
+        <Input
+          id="images"
+          type="file"
+          accept="image/*"
+          multiple
+          disabled={uploading}
+          onChange={handleFilesSelected}
+        />
+        {uploading && (
+          <p className="text-sm text-muted-foreground">Subiendo fotos...</p>
+        )}
+        {uploadError && <p className="text-sm text-destructive">{uploadError}</p>}
       </div>
 
       {state.status === "error" && (
         <p className="text-sm text-destructive">{state.message}</p>
       )}
 
-      <Button type="submit" disabled={pending}>
-        {pending ? "Guardando..." : product ? "Guardar cambios" : "Crear producto"}
+      <Button type="submit" disabled={pending || uploading}>
+        {pending
+          ? "Guardando..."
+          : uploading
+            ? "Esperando fotos..."
+            : product
+              ? "Guardar cambios"
+              : "Crear producto"}
       </Button>
     </form>
   );
