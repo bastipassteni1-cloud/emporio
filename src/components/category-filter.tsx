@@ -1,6 +1,30 @@
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import type { Category } from "@/lib/types";
+
+function Pill({
+  href,
+  active,
+  children,
+}: {
+  href: string;
+  active: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "rounded-full border-[1.5px] px-5 py-2 font-sans text-sm font-semibold transition-colors",
+        active
+          ? "border-nogal bg-nogal text-crudo"
+          : "border-linea bg-crudo text-nogal-suave hover:border-ocre hover:text-nogal",
+      )}
+    >
+      {children}
+    </Link>
+  );
+}
 
 export function CategoryFilter({
   categories,
@@ -12,17 +36,19 @@ export function CategoryFilter({
   if (categories.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap gap-2">
-      <Link href="/">
-        <Badge variant={!activeSlug ? "default" : "outline"}>Todos</Badge>
-      </Link>
+    <>
+      <Pill href="/" active={!activeSlug}>
+        Todos
+      </Pill>
       {categories.map((category) => (
-        <Link key={category.id} href={`/?categoria=${category.slug}`}>
-          <Badge variant={activeSlug === category.slug ? "default" : "outline"}>
-            {category.name}
-          </Badge>
-        </Link>
+        <Pill
+          key={category.id}
+          href={`/?categoria=${category.slug}`}
+          active={activeSlug === category.slug}
+        >
+          {category.name}
+        </Pill>
       ))}
-    </div>
+    </>
   );
 }
