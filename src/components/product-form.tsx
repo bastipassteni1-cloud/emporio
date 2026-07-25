@@ -69,7 +69,7 @@ export function ProductForm({
   }
 
   return (
-    <form action={formAction} className="max-w-lg space-y-4">
+    <form action={formAction} className="max-w-4xl">
       {product && <input type="hidden" name="slug" value={product.slug} />}
       {newImages.map((img) => (
         <input
@@ -80,165 +80,171 @@ export function ProductForm({
         />
       ))}
 
-      <div className="space-y-2">
-        <Label htmlFor="name">Nombre</Label>
-        <Input id="name" name="name" defaultValue={product?.name} />
-      </div>
+      <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="name">Nombre</Label>
+            <Input id="name" name="name" defaultValue={product?.name} />
+          </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="description">Descripción</Label>
-        <Textarea
-          id="description"
-          name="description"
-          rows={4}
-          defaultValue={product?.description}
-        />
-      </div>
+          <div className="space-y-2">
+            <Label htmlFor="description">Descripción</Label>
+            <Textarea
+              id="description"
+              name="description"
+              rows={4}
+              defaultValue={product?.description}
+            />
+          </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="price">Precio (CLP)</Label>
-        <Input
-          id="price"
-          name="price"
-          type="number"
-          min={0}
-          step={1}
-          defaultValue={product?.price}
-        />
-      </div>
+          <div className="space-y-2">
+            <Label htmlFor="price">Precio (CLP)</Label>
+            <Input
+              id="price"
+              name="price"
+              type="number"
+              min={0}
+              step={1}
+              defaultValue={product?.price}
+            />
+          </div>
 
-      <MeasurementField defaultValue={product?.dimensions ?? ""} />
+          <MeasurementField defaultValue={product?.dimensions ?? ""} />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="status">Estado</Label>
-          <Select name="status" defaultValue={product?.status ?? "available"}>
-            <SelectTrigger id="status" className="w-full">
-              <SelectValue>
-                {(value: string) => formatProductStatus(value)}
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="available">Disponible</SelectItem>
-              <SelectItem value="sold">Vendido</SelectItem>
-              <SelectItem value="made_to_order">Hecho a pedido</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="status">Estado</Label>
+              <Select name="status" defaultValue={product?.status ?? "available"}>
+                <SelectTrigger id="status" className="w-full">
+                  <SelectValue>
+                    {(value: string) => formatProductStatus(value)}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="available">Disponible</SelectItem>
+                  <SelectItem value="sold">Vendido</SelectItem>
+                  <SelectItem value="made_to_order">Hecho a pedido</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="category_id">Categoría</Label>
+              <Select name="category_id" defaultValue={product?.category_id ?? undefined}>
+                <SelectTrigger id="category_id" className="w-full">
+                  <SelectValue placeholder="Selecciona una categoría">
+                    {(value: string) =>
+                      categories.find((c) => c.id === value)?.name ??
+                      "Selecciona una categoría"
+                    }
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="category_id">Categoría</Label>
-          <Select name="category_id" defaultValue={product?.category_id ?? undefined}>
-            <SelectTrigger id="category_id" className="w-full">
-              <SelectValue placeholder="Selecciona una categoría">
-                {(value: string) =>
-                  categories.find((c) => c.id === value)?.name ??
-                  "Selecciona una categoría"
-                }
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map((category) => (
-                <SelectItem key={category.id} value={category.id}>
-                  {category.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
 
-      {(existingImages.length > 0 || newImages.length > 0) && (
-        <div className="space-y-2">
-          <Label>Fotos</Label>
-          <div className="flex flex-wrap gap-3">
-            {existingImages.map((image) => {
-              const marked = removedIds.includes(image.id);
-              return (
-                <div key={image.id} className="relative">
-                  <div
-                    className="relative h-20 w-20 overflow-hidden rounded-md border"
-                    style={{ opacity: marked ? 0.3 : 1 }}
-                  >
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label>Fotos</Label>
+            <div className="flex flex-wrap gap-3">
+              {existingImages.map((image) => {
+                const marked = removedIds.includes(image.id);
+                return (
+                  <div key={image.id} className="relative">
+                    <div
+                      className="relative h-20 w-20 overflow-hidden rounded-md border"
+                      style={{ opacity: marked ? 0.3 : 1 }}
+                    >
+                      <Image
+                        src={getProductImageUrl(image.storage_path)}
+                        alt=""
+                        fill
+                        className="object-cover"
+                        sizes="80px"
+                      />
+                    </div>
+                    {marked && (
+                      <input type="hidden" name="remove_image_ids" value={image.id} />
+                    )}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setRemovedIds((prev) =>
+                          marked
+                            ? prev.filter((id) => id !== image.id)
+                            : [...prev, image.id],
+                        )
+                      }
+                      className="mt-1 block w-full text-xs text-muted-foreground hover:underline"
+                    >
+                      {marked ? "Deshacer" : "Eliminar"}
+                    </button>
+                  </div>
+                );
+              })}
+              {newImages.map((img) => (
+                <div key={img.storage_path} className="relative">
+                  <div className="relative h-20 w-20 overflow-hidden rounded-md border">
                     <Image
-                      src={getProductImageUrl(image.storage_path)}
+                      src={getProductImageUrl(img.storage_path)}
                       alt=""
                       fill
                       className="object-cover"
                       sizes="80px"
                     />
                   </div>
-                  {marked && (
-                    <input type="hidden" name="remove_image_ids" value={image.id} />
-                  )}
                   <button
                     type="button"
                     onClick={() =>
-                      setRemovedIds((prev) =>
-                        marked
-                          ? prev.filter((id) => id !== image.id)
-                          : [...prev, image.id],
+                      setNewImages((prev) =>
+                        prev.filter((i) => i.storage_path !== img.storage_path),
                       )
                     }
                     className="mt-1 block w-full text-xs text-muted-foreground hover:underline"
                   >
-                    {marked ? "Deshacer" : "Eliminar"}
+                    Quitar
                   </button>
                 </div>
-              );
-            })}
-            {newImages.map((img) => (
-              <div key={img.storage_path} className="relative">
-                <div className="relative h-20 w-20 overflow-hidden rounded-md border">
-                  <Image
-                    src={getProductImageUrl(img.storage_path)}
-                    alt=""
-                    fill
-                    className="object-cover"
-                    sizes="80px"
-                  />
-                </div>
-                <button
-                  type="button"
-                  onClick={() =>
-                    setNewImages((prev) =>
-                      prev.filter((i) => i.storage_path !== img.storage_path),
-                    )
-                  }
-                  className="mt-1 block w-full text-xs text-muted-foreground hover:underline"
-                >
-                  Quitar
-                </button>
-              </div>
-            ))}
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="images">
+              {existingImages.length > 0 || newImages.length > 0
+                ? "Agregar más fotos"
+                : "Subir fotos"}
+            </Label>
+            <Input
+              id="images"
+              type="file"
+              accept="image/*"
+              multiple
+              disabled={uploading}
+              onChange={handleFilesSelected}
+            />
+            {uploading && (
+              <p className="text-sm text-muted-foreground">Subiendo fotos...</p>
+            )}
+            {uploadError && (
+              <p className="text-sm text-destructive">{uploadError}</p>
+            )}
           </div>
         </div>
-      )}
-
-      <div className="space-y-2">
-        <Label htmlFor="images">
-          {existingImages.length > 0 || newImages.length > 0
-            ? "Agregar más fotos"
-            : "Fotos"}
-        </Label>
-        <Input
-          id="images"
-          type="file"
-          accept="image/*"
-          multiple
-          disabled={uploading}
-          onChange={handleFilesSelected}
-        />
-        {uploading && (
-          <p className="text-sm text-muted-foreground">Subiendo fotos...</p>
-        )}
-        {uploadError && <p className="text-sm text-destructive">{uploadError}</p>}
       </div>
 
       {state.status === "error" && (
-        <p className="text-sm text-destructive">{state.message}</p>
+        <p className="mt-4 text-sm text-destructive">{state.message}</p>
       )}
 
-      <Button type="submit" disabled={pending || uploading}>
+      <Button type="submit" disabled={pending || uploading} className="mt-6">
         {pending
           ? "Guardando..."
           : uploading
