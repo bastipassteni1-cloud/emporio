@@ -13,23 +13,45 @@ export type ProductFormState = {
 };
 
 type NewImage = { storage_path: string; position: number };
+type ImageOrder = { id: string; position: number };
 
-function parseNewImages(formData: FormData): NewImage[] {
+function parseJsonEntries<T>(
+  formData: FormData,
+  field: string,
+  isValid: (v: unknown) => v is T,
+): T[] {
   return formData
-    .getAll("new_images")
+    .getAll(field)
     .filter((v): v is string => typeof v === "string")
     .map((raw) => {
       try {
         const parsed = JSON.parse(raw);
-        if (typeof parsed.storage_path === "string" && typeof parsed.position === "number") {
-          return parsed as NewImage;
-        }
+        return isValid(parsed) ? parsed : null;
       } catch {
-        // ignore malformed entries
+        return null;
       }
-      return null;
     })
-    .filter((v): v is NewImage => v !== null);
+    .filter((v): v is T => v !== null);
+}
+
+function parseNewImages(formData: FormData): NewImage[] {
+  return parseJsonEntries(
+    formData,
+    "new_images",
+    (v): v is NewImage =>
+      typeof (v as NewImage)?.storage_path === "string" &&
+      typeof (v as NewImage)?.position === "number",
+  );
+}
+
+function parseImageOrder(formData: FormData): ImageOrder[] {
+  return parseJsonEntries(
+    formData,
+    "existing_image_order",
+    (v): v is ImageOrder =>
+      typeof (v as ImageOrder)?.id === "string" &&
+      typeof (v as ImageOrder)?.position === "number",
+  );
 }
 
 async function ensureUniqueSlug(
@@ -44,6 +66,16 @@ async function ensureUniqueSlug(
 
   if (!data) return candidate;
   return `${candidate}-${crypto.randomUUID().slice(0, 6)}`;
+}
+
+async function updateImagePositions(supabase: SupabaseClient, order: ImageOrder[]) {
+  for (const { id, position } of order) {
+    const { error } = await supabase
+      .from("product_images")
+      .update({ position })
+      .eq("id", id);
+    if (error) throw error;
+  }
 }
 
 async function insertImageRows(
@@ -164,6 +196,7 @@ export async function updateProduct(
   }
 
   try {
+    await updateImagePositions(supabase, parseImageOrder(formData));
     await insertImageRows(supabase, productId, parseNewImages(formData));
   } catch {
     return {
