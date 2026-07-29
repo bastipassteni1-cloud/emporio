@@ -2,6 +2,7 @@ export type CategoryTheme = {
   gradient: string;
   labelClassName: string;
   icon: React.ReactNode;
+  patternClassName?: string;
 };
 
 const woodIcon = (
@@ -39,11 +40,13 @@ const THEMES: Record<string, CategoryTheme> = {
     gradient: "linear-gradient(135deg, #EBDCC2, #DCC7A0)",
     labelClassName: "text-ocre",
     icon: woodIcon,
+    patternClassName: "card-info--madera",
   },
   tejidos: {
     gradient: "linear-gradient(135deg, #E3E9DB, #CBD8C2)",
     labelClassName: "text-salvia",
     icon: weaveIcon,
+    patternClassName: "card-info--tejidos",
   },
   bordados: {
     gradient: "linear-gradient(135deg, #EFD9DD, #E3C0C8)",

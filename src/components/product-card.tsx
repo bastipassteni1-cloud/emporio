@@ -78,7 +78,13 @@ export function ProductCard({ product }: { product: Product }) {
         )}
       </div>
 
-      <Link href={href} className="flex flex-1 flex-col gap-1 px-3 pt-3 pb-4 sm:gap-1.5 sm:px-4 sm:pt-4 sm:pb-5">
+      <Link
+        href={href}
+        className={cn(
+          "flex flex-1 flex-col gap-1 px-3 pt-3 pb-4 sm:gap-1.5 sm:px-4 sm:pt-4 sm:pb-5",
+          theme.patternClassName,
+        )}
+      >
         <div className="flex items-center justify-between gap-2">
           {product.category && (
             <span

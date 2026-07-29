@@ -150,3 +150,24 @@
     @apply font-sans;
   }
 }
+
+/*
+  Patrones decorativos por categoría para las tarjetas de producto.
+  Girasoles -> categoría "tejidos". Herraduras -> categoría "madera".
+  Va solo en el fondo del bloque de texto (nombre, precio, botón),
+  nunca sobre la foto del producto. background-color calibrado a
+  --crudo (#FFFDF8) para que combine con el resto de la tarjeta.
+*/
+.card-info--tejidos {
+  background-color: #fffdf8;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2264%22%20height%3D%2264%22%20viewBox%3D%220%200%2064%2064%22%3E%20%3Cg%20transform%3D%22translate%2832%2C32%29%20scale%280.62%29%22%20opacity%3D%220.24%22%3E%20%3Cpath%20d%3D%22M%200%2C-3%20C%20-6%2C-6%20-7%2C-14%200%2C-20%20C%207%2C-14%206%2C-6%200%2C-3%20Z%22%20fill%3D%22%23EFB92E%22%20transform%3D%22rotate%280%29%22/%3E%20%3Cpath%20d%3D%22M%200%2C-3%20C%20-6%2C-6%20-7%2C-14%200%2C-20%20C%207%2C-14%206%2C-6%200%2C-3%20Z%22%20fill%3D%22%23EFB92E%22%20transform%3D%22rotate%2851.4%29%22/%3E%20%3Cpath%20d%3D%22M%200%2C-3%20C%20-6%2C-6%20-7%2C-14%200%2C-20%20C%207%2C-14%206%2C-6%200%2C-3%20Z%22%20fill%3D%22%23EFB92E%22%20transform%3D%22rotate%28102.9%29%22/%3E%20%3Cpath%20d%3D%22M%200%2C-3%20C%20-6%2C-6%20-7%2C-14%200%2C-20%20C%207%2C-14%206%2C-6%200%2C-3%20Z%22%20fill%3D%22%23EFB92E%22%20transform%3D%22rotate%28154.3%29%22/%3E%20%3Cpath%20d%3D%22M%200%2C-3%20C%20-6%2C-6%20-7%2C-14%200%2C-20%20C%207%2C-14%206%2C-6%200%2C-3%20Z%22%20fill%3D%22%23EFB92E%22%20transform%3D%22rotate%28205.7%29%22/%3E%20%3Cpath%20d%3D%22M%200%2C-3%20C%20-6%2C-6%20-7%2C-14%200%2C-20%20C%207%2C-14%206%2C-6%200%2C-3%20Z%22%20fill%3D%22%23EFB92E%22%20transform%3D%22rotate%28257.1%29%22/%3E%20%3Cpath%20d%3D%22M%200%2C-3%20C%20-6%2C-6%20-7%2C-14%200%2C-20%20C%207%2C-14%206%2C-6%200%2C-3%20Z%22%20fill%3D%22%23EFB92E%22%20transform%3D%22rotate%28308.6%29%22/%3E%20%3Ccircle%20r%3D%225.5%22%20fill%3D%22%238a6a2f%22/%3E%20%3C/g%3E%20%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 64px 64px;
+}
+
+.card-info--madera {
+  background-color: #fffdf8;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2264%22%20height%3D%2264%22%20viewBox%3D%220%200%2064%2064%22%3E%20%3Cg%20transform%3D%22translate%2832%2C32%29%20scale%280.4%29%20rotate%28180%29%22%20opacity%3D%220.22%22%3E%20%3Cpath%20d%3D%22M%2024.4%2C-8.9%20A%2026%2C26%200%201%2C1%20-24.4%2C-8.9%22%20stroke%3D%22%23C08A3E%22%20stroke-width%3D%2215%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22/%3E%20%3Ccircle%20cx%3D%2226.0%22%20cy%3D%22-0.9%22%20r%3D%222.4%22%20fill%3D%22%23FFFDF9%22/%3E%20%3Ccircle%20cx%3D%2222.0%22%20cy%3D%2213.8%22%20r%3D%222.4%22%20fill%3D%22%23FFFDF9%22/%3E%20%3Ccircle%20cx%3D%2210.6%22%20cy%3D%2223.8%22%20r%3D%222.4%22%20fill%3D%22%23FFFDF9%22/%3E%20%3Ccircle%20cx%3D%22-10.6%22%20cy%3D%2223.8%22%20r%3D%222.4%22%20fill%3D%22%23FFFDF9%22/%3E%20%3Ccircle%20cx%3D%22-22.0%22%20cy%3D%2213.8%22%20r%3D%222.4%22%20fill%3D%22%23FFFDF9%22/%3E%20%3Ccircle%20cx%3D%22-26.0%22%20cy%3D%22-0.9%22%20r%3D%222.4%22%20fill%3D%22%23FFFDF9%22/%3E%20%3C/g%3E%20%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 64px 64px;
+}
