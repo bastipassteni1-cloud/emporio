@@ -53,7 +53,7 @@ export function ProductGallery({
           src={getProductImageUrl(sorted[active].storage_path)}
           alt={productName}
           fill
-          className="object-cover transition-transform duration-150 ease-out"
+          className="object-contain transition-transform duration-150 ease-out"
           style={{
             transform: isZoomed ? `scale(${ZOOM_SCALE})` : "scale(1)",
             transformOrigin: `${origin.x}% ${origin.y}%`,
@@ -81,7 +81,7 @@ export function ProductGallery({
                 src={getProductImageUrl(image.storage_path)}
                 alt={`${productName} ${index + 1}`}
                 fill
-                className="object-cover"
+                className="object-contain"
                 sizes="64px"
               />
             </button>

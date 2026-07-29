@@ -21,7 +21,10 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-linea bg-crudo shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
       <div
-        className="relative flex aspect-square items-center justify-center"
+        className={cn(
+          "relative flex aspect-square items-center justify-center",
+          images.length > 0 && "bg-muted",
+        )}
         style={images.length === 0 ? { backgroundImage: theme.gradient } : undefined}
       >
         <Link href={href} aria-label={product.name} className="absolute inset-0">
@@ -30,7 +33,7 @@ export function ProductCard({ product }: { product: Product }) {
               src={getProductImageUrl(images[index].storage_path)}
               alt={product.name}
               fill
-              className="object-cover"
+              className="object-contain"
               sizes="(min-width: 768px) 25vw, 50vw"
             />
           ) : (
