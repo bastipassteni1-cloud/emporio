@@ -35,13 +35,16 @@ const defaultIcon = (
   </svg>
 );
 
+const maderaTheme: CategoryTheme = {
+  gradient: "linear-gradient(135deg, #EBDCC2, #DCC7A0)",
+  labelClassName: "text-ocre",
+  icon: woodIcon,
+  patternClassName: "card-info--madera",
+};
+
 const THEMES: Record<string, CategoryTheme> = {
-  madera: {
-    gradient: "linear-gradient(135deg, #EBDCC2, #DCC7A0)",
-    labelClassName: "text-ocre",
-    icon: woodIcon,
-    patternClassName: "card-info--madera",
-  },
+  madera: maderaTheme,
+  "artesania-en-madera": maderaTheme,
   tejidos: {
     gradient: "linear-gradient(135deg, #E3E9DB, #CBD8C2)",
     labelClassName: "text-salvia",
