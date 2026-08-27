@@ -1,4 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
+import { ImageOffIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +14,12 @@ import {
 import { DeleteProductButton } from "@/components/delete-product-button";
 import { formatPrice, formatProductStatus } from "@/lib/format";
 import { getProducts } from "@/lib/queries/products";
+import { getProductImageUrl } from "@/lib/storage";
+import type { Product } from "@/lib/types";
+
+function getCoverImage(product: Product) {
+  return (product.product_images ?? []).slice().sort((a, b) => a.position - b.position)[0];
+}
 
 export default async function AdminProductsPage() {
   const products = await getProducts();
@@ -34,6 +42,7 @@ export default async function AdminProductsPage() {
         <Table className="mt-6">
           <TableHeader>
             <TableRow>
+              <TableHead>Foto</TableHead>
               <TableHead>Nombre</TableHead>
               <TableHead>Categoría</TableHead>
               <TableHead>Precio</TableHead>
@@ -42,8 +51,27 @@ export default async function AdminProductsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {products.map((product) => (
+            {products.map((product) => {
+              const cover = getCoverImage(product);
+              return (
               <TableRow key={product.id}>
+                <TableCell>
+                  <div className="relative size-12 shrink-0 overflow-hidden rounded-md bg-muted">
+                    {cover ? (
+                      <Image
+                        src={getProductImageUrl(cover.storage_path)}
+                        alt={product.name}
+                        fill
+                        className="object-cover"
+                        sizes="48px"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-muted-foreground">
+                        <ImageOffIcon className="size-4" />
+                      </div>
+                    )}
+                  </div>
+                </TableCell>
                 <TableCell className="font-medium">{product.name}</TableCell>
                 <TableCell>{product.category?.name ?? "—"}</TableCell>
                 <TableCell>{formatPrice(product.price)}</TableCell>
@@ -69,7 +97,8 @@ export default async function AdminProductsPage() {
                   />
                 </TableCell>
               </TableRow>
-            ))}
+              );
+            })}
           </TableBody>
         </Table>
       )}
