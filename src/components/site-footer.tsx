@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { SunflowerRow } from "@/components/sunflower-row";
 import { getCategories } from "@/lib/queries/products";
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? "Girasol Artesanal";
@@ -10,8 +9,7 @@ export async function SiteFooter() {
 
   return (
     <footer className="mt-10 border-t border-linea bg-crudo">
-      <SunflowerRow />
-      <div className="mx-auto flex max-w-5xl flex-col items-center gap-8 px-5 py-6 text-center sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-7 sm:px-7 sm:text-left">
+      <div className="mx-auto flex max-w-5xl flex-col items-center gap-8 px-5 pt-6 pb-6 text-center sm:flex-row sm:flex-wrap sm:items-start sm:justify-between sm:gap-7 sm:px-7 sm:text-left">
         <div className="max-w-[280px]">
           <Link
             href="/"

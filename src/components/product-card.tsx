@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatPrice, formatProductStatus } from "@/lib/format";
 import { getCategoryTheme } from "@/lib/category-theme";
@@ -19,7 +19,12 @@ export function ProductCard({ product }: { product: Product }) {
   const href = `/productos/${product.slug}`;
 
   return (
-    <div className="group flex flex-col overflow-hidden rounded-2xl border border-linea bg-crudo shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
+    <div className="group flex flex-col overflow-hidden rounded-lg border border-nogal/20 bg-crudo transition-all hover:-translate-y-1">
+      <div
+        className="h-[3px] w-full shrink-0"
+        style={{ backgroundColor: theme.accentColor }}
+        aria-hidden
+      />
       <div
         className={cn(
           "relative flex aspect-square items-center justify-center",
@@ -38,7 +43,11 @@ export function ProductCard({ product }: { product: Product }) {
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">
-              <div className="h-[46%] w-[46%] opacity-55">{theme.icon}</div>
+              <theme.icon
+                className="h-[46%] w-[46%] opacity-55"
+                color={theme.accentColor}
+                strokeWidth={1.25}
+              />
             </div>
           )}
         </Link>
@@ -51,7 +60,7 @@ export function ProductCard({ product }: { product: Product }) {
               onClick={() =>
                 setIndex((i) => (i === 0 ? images.length - 1 : i - 1))
               }
-              className="absolute top-1/2 left-1.5 flex size-6 -translate-y-1/2 items-center justify-center rounded-full bg-crudo/90 text-nogal shadow-sm sm:left-2 sm:size-7"
+              className="absolute top-1/2 left-1.5 flex size-6 -translate-y-1/2 items-center justify-center rounded-full text-nogal/80 drop-shadow-sm transition-colors hover:text-nogal sm:left-2 sm:size-7"
             >
               <ChevronLeftIcon className="size-3.5 sm:size-4" />
             </button>
@@ -59,7 +68,7 @@ export function ProductCard({ product }: { product: Product }) {
               type="button"
               aria-label="Foto siguiente"
               onClick={() => setIndex((i) => (i === images.length - 1 ? 0 : i + 1))}
-              className="absolute top-1/2 right-1.5 flex size-6 -translate-y-1/2 items-center justify-center rounded-full bg-crudo/90 text-nogal shadow-sm sm:right-2 sm:size-7"
+              className="absolute top-1/2 right-1.5 flex size-6 -translate-y-1/2 items-center justify-center rounded-full text-nogal/80 drop-shadow-sm transition-colors hover:text-nogal sm:right-2 sm:size-7"
             >
               <ChevronRightIcon className="size-3.5 sm:size-4" />
             </button>
@@ -83,16 +92,15 @@ export function ProductCard({ product }: { product: Product }) {
 
       <Link
         href={href}
-        className={cn(
-          "flex flex-1 flex-col gap-1 px-3 pt-3 pb-4 sm:gap-1.5 sm:px-4 sm:pt-4 sm:pb-5",
-          theme.patternClassName,
-        )}
+        className="flex flex-1 flex-col gap-1 px-3 pt-3 pb-4 sm:gap-1.5 sm:px-4 sm:pt-4 sm:pb-5"
       >
         <div className="flex items-center justify-between gap-2">
           {product.category && (
             <span
-              className={`text-[0.68rem] font-bold tracking-wide uppercase sm:text-[0.72rem] ${theme.labelClassName}`}
+              className="inline-flex items-center gap-1 text-[0.68rem] font-bold tracking-wide uppercase sm:text-[0.72rem]"
+              style={{ color: theme.accentColor }}
             >
+              <theme.icon className="size-3 sm:size-3.5" aria-hidden />
               {product.category.name}
             </span>
           )}
@@ -109,7 +117,8 @@ export function ProductCard({ product }: { product: Product }) {
           <span className="text-sm font-bold text-nogal sm:text-base">
             {formatPrice(product.price)}
           </span>
-          <span className="rounded-full border-[1.5px] border-nogal px-3 py-1 text-xs font-semibold text-nogal transition-colors group-hover:bg-nogal group-hover:text-crudo sm:px-4 sm:py-1.5 sm:text-[0.82rem]">
+          <span className="inline-flex items-center gap-1 rounded-full border-[1.5px] border-nogal px-3 py-1 text-xs font-semibold text-nogal transition-colors group-hover:bg-nogal group-hover:text-crudo sm:px-4 sm:py-1.5 sm:text-[0.82rem]">
+            <ImageIcon className="size-3" aria-hidden />
             Ver
           </span>
         </div>

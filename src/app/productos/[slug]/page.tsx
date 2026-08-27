@@ -59,8 +59,10 @@ export default async function ProductPage({
         <div>
           {product.category && (
             <span
-              className={`text-[0.72rem] font-bold tracking-wide uppercase ${theme.labelClassName}`}
+              className="inline-flex items-center gap-1.5 text-[0.72rem] font-bold tracking-wide uppercase"
+              style={{ color: theme.accentColor }}
             >
+              <theme.icon className="size-3.5" aria-hidden />
               {product.category.name}
             </span>
           )}
