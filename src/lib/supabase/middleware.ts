@@ -25,7 +25,21 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { pathname } = request.nextUrl;
+  const isPrivateAdminPath =
+    (pathname === "/admin" || pathname.startsWith("/admin/")) &&
+    pathname !== "/admin/login";
+
+  if (isPrivateAdminPath && !user) {
+    const loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = "/admin/login";
+    loginUrl.search = "";
+    return NextResponse.redirect(loginUrl);
+  }
 
   return supabaseResponse;
 }

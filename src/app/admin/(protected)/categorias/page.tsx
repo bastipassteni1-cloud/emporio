@@ -1,12 +1,12 @@
 import { CategoryManager } from "@/components/category-manager";
-import { getCategories } from "@/lib/queries/products";
+import { getCategoriesWithCounts } from "@/lib/queries/admin";
 
 export default async function AdminCategoriesPage() {
-  const categories = await getCategories();
+  const categories = await getCategoriesWithCounts();
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold tracking-tight">Categorías</h1>
+      <h1 className="font-heading text-2xl font-medium text-nogal">Categorías</h1>
       <div className="mt-6">
         <CategoryManager categories={categories} />
       </div>

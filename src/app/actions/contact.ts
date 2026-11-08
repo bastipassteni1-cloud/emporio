@@ -3,26 +3,55 @@
 import { contactMessageSchema } from "@/lib/schemas/contact";
 import { createClient } from "@/lib/supabase/server";
 
+type ContactField = "name" | "contact_info" | "message";
+
 export type ContactFormState = {
   status: "idle" | "success" | "error";
   message?: string;
+  fieldErrors?: Partial<Record<ContactField, string>>;
+  values?: Partial<Record<ContactField, string>>;
 };
+
+function text(formData: FormData, field: string): string {
+  const value = formData.get(field);
+  return typeof value === "string" ? value : "";
+}
 
 export async function submitContactMessage(
   _prevState: ContactFormState,
   formData: FormData,
 ): Promise<ContactFormState> {
+  const values = {
+    name: text(formData, "name"),
+    contact_info: text(formData, "contact_info"),
+    message: text(formData, "message"),
+  };
+
+  // Campo trampa: solo un bot lo completa. No se guarda ni se confirma envío.
+  if (text(formData, "website")) {
+    return {
+      status: "error",
+      message: "No pudimos enviar tu mensaje. Intenta de nuevo.",
+      values,
+    };
+  }
+
   const parsed = contactMessageSchema.safeParse({
-    name: formData.get("name"),
-    contact_info: formData.get("contact_info"),
-    message: formData.get("message"),
+    ...values,
     product_id: formData.get("product_id") ?? "",
   });
 
   if (!parsed.success) {
+    const fieldErrors: ContactFormState["fieldErrors"] = {};
+    for (const issue of parsed.error.issues) {
+      const field = issue.path[0] as ContactField;
+      fieldErrors[field] ??= issue.message;
+    }
     return {
       status: "error",
-      message: parsed.error.issues[0]?.message ?? "Datos inválidos.",
+      message: "Revisa los campos marcados.",
+      fieldErrors,
+      values,
     };
   }
 
@@ -40,6 +69,7 @@ export async function submitContactMessage(
     return {
       status: "error",
       message: "No pudimos enviar tu mensaje. Intenta de nuevo.",
+      values,
     };
   }
 

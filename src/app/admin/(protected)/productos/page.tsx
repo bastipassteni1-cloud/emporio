@@ -1,106 +1,38 @@
-import Image from "next/image";
 import Link from "next/link";
-import { ImageOffIcon } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { PlusIcon } from "lucide-react";
+import { AdminProductsTable } from "@/components/admin-products-table";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { DeleteProductButton } from "@/components/delete-product-button";
-import { formatPrice, formatProductStatus } from "@/lib/format";
-import { getProducts } from "@/lib/queries/products";
-import { getProductImageUrl } from "@/lib/storage";
-import type { Product } from "@/lib/types";
-
-function getCoverImage(product: Product) {
-  return (product.product_images ?? []).slice().sort((a, b) => a.position - b.position)[0];
-}
+import { getCategories, getProducts } from "@/lib/queries/products";
 
 export default async function AdminProductsPage() {
-  const products = await getProducts();
+  const [products, categories] = await Promise.all([
+    getProducts(),
+    getCategories(),
+  ]);
 
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold tracking-tight">Productos</h1>
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="font-heading text-2xl font-medium text-nogal">
+          Productos
+        </h1>
         <Button
           nativeButton={false}
-          render={<Link href="/admin/productos/nuevo">Nuevo producto</Link>}
+          render={
+            <Link href="/admin/productos/nuevo">
+              <PlusIcon aria-hidden />
+              Nuevo producto
+            </Link>
+          }
         />
       </div>
 
       {products.length === 0 ? (
-        <p className="mt-8 text-muted-foreground">
+        <p className="mt-8 text-nogal-suave">
           Todavía no hay productos. Crea el primero.
         </p>
       ) : (
-        <Table className="mt-6">
-          <TableHeader>
-            <TableRow>
-              <TableHead>Foto</TableHead>
-              <TableHead>Nombre</TableHead>
-              <TableHead>Categoría</TableHead>
-              <TableHead>Precio</TableHead>
-              <TableHead>Estado</TableHead>
-              <TableHead className="text-right">Acciones</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {products.map((product) => {
-              const cover = getCoverImage(product);
-              return (
-              <TableRow key={product.id}>
-                <TableCell>
-                  <div className="relative size-12 shrink-0 overflow-hidden rounded-md bg-muted">
-                    {cover ? (
-                      <Image
-                        src={getProductImageUrl(cover.storage_path)}
-                        alt={product.name}
-                        fill
-                        className="object-cover"
-                        sizes="48px"
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center text-muted-foreground">
-                        <ImageOffIcon className="size-4" />
-                      </div>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell className="font-medium">{product.name}</TableCell>
-                <TableCell>{product.category?.name ?? "—"}</TableCell>
-                <TableCell>{formatPrice(product.price)}</TableCell>
-                <TableCell>
-                  <Badge variant="secondary">
-                    {formatProductStatus(product.status)}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-right space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    nativeButton={false}
-                    render={
-                      <Link href={`/admin/productos/${product.id}/editar`}>
-                        Editar
-                      </Link>
-                    }
-                  />
-                  <DeleteProductButton
-                    productId={product.id}
-                    productName={product.name}
-                  />
-                </TableCell>
-              </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+        <AdminProductsTable products={products} categories={categories} />
       )}
     </div>
   );

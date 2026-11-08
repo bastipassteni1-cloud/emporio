@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { getProductImageUrl } from "@/lib/storage";
-import { formatProductStatus } from "@/lib/format";
+import { formatPrice, formatProductStatus } from "@/lib/format";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import type { Category, Product } from "@/lib/types";
@@ -53,6 +53,8 @@ export function ProductForm({
   const [removedIds, setRemovedIds] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [priceInput, setPriceInput] = useState(String(product?.price ?? ""));
+  const price = Number(priceInput);
 
   async function handleFilesSelected(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? []);
@@ -149,8 +151,17 @@ export function ProductForm({
               type="number"
               min={0}
               step={1}
-              defaultValue={product?.price}
+              value={priceInput}
+              onChange={(e) => setPriceInput(e.target.value)}
+              aria-describedby="price-hint"
             />
+            <p id="price-hint" className="text-xs text-nogal-suave">
+              {priceInput === ""
+                ? "Si lo dejas vacío se publicará a $0."
+                : Number.isInteger(price) && price >= 0
+                  ? `Se mostrará como ${formatPrice(price)}.`
+                  : "Usa un número entero, sin puntos ni decimales."}
+            </p>
           </div>
 
           <MeasurementField defaultValue={product?.dimensions ?? ""} />

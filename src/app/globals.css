@@ -17,6 +17,7 @@
   --color-nogal-suave: var(--nogal-suave);
   --color-ocre: var(--ocre);
   --color-ocre-suave: var(--ocre-suave);
+  --color-ocre-texto: var(--ocre-texto);
   --color-salvia: var(--salvia);
   --color-salvia-suave: var(--salvia-suave);
   --color-ciruela: var(--ciruela);
@@ -60,12 +61,13 @@
 }
 
 :root {
-  --lino: #ede1c7;
+  --lino: #f8efe4;
   --crudo: #fffdf8;
   --nogal: #2e2620;
   --nogal-suave: #6b5f52;
   --ocre: #c98a2b;
   --ocre-suave: #e9c88a;
+  --ocre-texto: #855510;
   --salvia: #6e8b63;
   --salvia-suave: #cbd8c2;
   --ciruela: #a65b6d;
@@ -148,5 +150,11 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
   }
 }

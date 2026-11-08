@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Fraunces, Karla, Caveat } from "next/font/google";
 import "./globals.css";
-import { SiteHeader } from "@/components/site-header";
-import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/sonner";
+import { siteUrl } from "@/lib/site-url";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -26,9 +25,19 @@ const caveat = Caveat({
 
 const siteName = process.env.NEXT_PUBLIC_SITE_NAME ?? "Girasol Artesanal";
 
+const description = `${siteName} — productos artesanales hechos a mano en madera, tejidos y bordados.`;
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: { default: siteName, template: `%s | ${siteName}` },
-  description: `${siteName} — productos artesanales hechos a mano en madera, tejidos y bordados.`,
+  description,
+  openGraph: {
+    title: siteName,
+    description,
+    siteName,
+    locale: "es_CL",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -39,12 +48,11 @@ export default function RootLayout({
   return (
     <html
       lang="es"
+      data-scroll-behavior="smooth"
       className={`${fraunces.variable} ${karla.variable} ${caveat.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <SiteHeader />
-        <main className="flex-1">{children}</main>
-        <SiteFooter />
+        {children}
         <Toaster />
       </body>
     </html>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { toast } from "sonner";
 import { deleteProduct } from "@/app/actions/products";
 import { Button } from "@/components/ui/button";
 import {
@@ -49,7 +50,8 @@ export function DeleteProductButton({
             disabled={isPending}
             onClick={() =>
               startTransition(async () => {
-                await deleteProduct(productId);
+                const result = await deleteProduct(productId);
+                if (!result.success) toast.error(result.message);
                 setOpen(false);
               })
             }

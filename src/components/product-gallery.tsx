@@ -59,7 +59,7 @@ export function ProductGallery({
             transformOrigin: `${origin.x}% ${origin.y}%`,
           }}
           sizes="(min-width: 768px) 50vw, 100vw"
-          priority
+          preload
         />
       </div>
       {sorted.length > 1 && (

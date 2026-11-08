@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { productSchema } from "@/lib/schemas/product";
 import { generateSlug } from "@/lib/slug";
-import { createClient } from "@/lib/supabase/server";
+import { requireAdmin } from "@/lib/auth";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 export type ProductFormState = {
@@ -114,7 +114,7 @@ export async function createProduct(
     };
   }
 
-  const supabase = await createClient();
+  const supabase = await requireAdmin();
   const slug = await ensureUniqueSlug(supabase, generateSlug(parsed.data.name));
 
   const { data: product, error } = await supabase
@@ -162,7 +162,7 @@ export async function updateProduct(
     };
   }
 
-  const supabase = await createClient();
+  const supabase = await requireAdmin();
 
   const { error } = await supabase
     .from("products")
@@ -211,22 +211,35 @@ export async function updateProduct(
   redirect("/admin/productos");
 }
 
-export async function deleteProduct(productId: string) {
-  const supabase = await createClient();
+export type DeleteProductResult = { success: boolean; message?: string };
 
-  const { data: images } = await supabase
+export async function deleteProduct(
+  productId: string,
+): Promise<DeleteProductResult> {
+  const supabase = await requireAdmin();
+
+  const { data: images, error: imagesError } = await supabase
     .from("product_images")
     .select("storage_path")
     .eq("product_id", productId);
 
-  if (images && images.length > 0) {
+  if (imagesError) {
+    return { success: false, message: "No se pudo eliminar el producto." };
+  }
+
+  // Primero el producto: si falla, sus fotos quedan intactas.
+  const { error } = await supabase.from("products").delete().eq("id", productId);
+  if (error) {
+    return { success: false, message: "No se pudo eliminar el producto." };
+  }
+
+  if (images.length > 0) {
     await supabase.storage
       .from("product-images")
       .remove(images.map((img) => img.storage_path));
   }
 
-  await supabase.from("products").delete().eq("id", productId);
-
   revalidatePath("/admin/productos");
   revalidatePath("/");
+  return { success: true };
 }

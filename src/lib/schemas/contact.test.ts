@@ -38,4 +38,13 @@ describe("contactMessageSchema", () => {
     });
     expect(result.success).toBe(false);
   });
+
+  it("rechaza un mensaje demasiado largo", () => {
+    const result = contactMessageSchema.safeParse({
+      name: "Ana",
+      contact_info: "ana@test.com",
+      message: "a".repeat(2001),
+    });
+    expect(result.success).toBe(false);
+  });
 });

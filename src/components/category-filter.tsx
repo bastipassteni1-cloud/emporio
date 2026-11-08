@@ -14,11 +14,12 @@ function Pill({
   return (
     <Link
       href={href}
+      aria-current={active ? "true" : undefined}
       className={cn(
-        "rounded-full border-[1.5px] px-4 py-1.5 font-sans text-sm font-semibold transition-colors sm:px-5 sm:py-2",
+        "rounded-full border-[1.5px] px-4 py-1.5 font-sans text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ocre-texto sm:px-6 sm:py-2.5 sm:text-[0.95rem]",
         active
           ? "border-nogal bg-nogal text-crudo"
-          : "border-linea bg-crudo text-nogal-suave hover:border-ocre hover:text-nogal",
+          : "border-linea bg-crudo text-nogal shadow-sm hover:border-ocre",
       )}
     >
       {children}
@@ -37,13 +38,13 @@ export function CategoryFilter({
 
   return (
     <>
-      <Pill href="/" active={!activeSlug}>
+      <Pill href="/#catalogo" active={!activeSlug}>
         Todos
       </Pill>
       {categories.map((category) => (
         <Pill
           key={category.id}
-          href={`/?categoria=${category.slug}`}
+          href={`/?categoria=${category.slug}#catalogo`}
           active={activeSlug === category.slug}
         >
           {category.name}

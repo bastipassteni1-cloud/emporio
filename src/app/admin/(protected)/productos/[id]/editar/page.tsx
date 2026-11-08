@@ -20,7 +20,7 @@ export default async function EditProductPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold tracking-tight">Editar producto</h1>
+      <h1 className="font-heading text-2xl font-medium text-nogal">Editar producto</h1>
       <div className="mt-6">
         <ProductForm
           categories={categories}
